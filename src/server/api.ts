@@ -49,7 +49,7 @@ async function getTopNews(): Promise<Article[]> {
     params: {
       q: 'technology',
       sortBy: 'popularity',
-      pageSize: 10,
+      pageSize: 100,
       page: 1,
       apiKey,
     },
@@ -57,7 +57,8 @@ async function getTopNews(): Promise<Article[]> {
 
   try {
     const response = await axios(options);
-    return response.data.articles as Article[];
+    return response.data.articles
+    .filter((article: Article) => article.urlToImage) as Article[];
   } catch (error) {
     if (error instanceof Error) {
       console.error('Erro ao buscar notícias:', error.message);
@@ -74,7 +75,7 @@ async function getTopNewsCarousel(): Promise<ArticleCarousel[]> {
     params: {
       q: 'technology',
       sortBy: 'relevancy',
-      pageSize: 5,
+      pageSize: 6,
       page: 1,
       apiKey,
     },
@@ -82,7 +83,9 @@ async function getTopNewsCarousel(): Promise<ArticleCarousel[]> {
 
   try {
     const response = await axios(options);
-    return response.data.articles.map((article: Article) => ({
+    return response.data.articles
+    .filter((article: Article) => article.urlToImage)
+    .map((article: Article) => ({
       urlToImage: article.urlToImage,
     })) as ArticleCarousel[];
   } catch (error) {

@@ -1,9 +1,10 @@
 import { Loading } from "@/components/loading";
+import NewsComponent from "@/components/newsComponent";
 import { Article, ArticleCarousel, newsServer } from "@/server/api";
 import { colors } from "@/styles/colors";
 import { Bell, Search } from "lucide-react-native";
 import { useEffect, useState } from "react";
-import { Dimensions, Image, StyleSheet, View } from "react-native";
+import { Dimensions, FlatList, Image, StyleSheet, View } from "react-native";
 import Carousel from 'react-native-reanimated-carousel';
 
 //Carousel info
@@ -70,17 +71,17 @@ export default function Index() {
                 <Image source={require('../../assets/favicon.png')} className="h-16 w-16"/>
 
                 <View className="flex-row justify-center mt-5 gap-3">
-                    <View className="rounded-full bg-zinc-300 p-3">
-                        <Bell color={colors.zinc[400]} className="h-5 w-5  "/>
+                    <View className="rounded-full bg-[#FFEBE9] p-3">
+                        <Bell color={colors.rose[950]} className="h-5 w-5  "/>
                     </View>
 
-                    <View className="rounded-full bg-zinc-300 p-3">
-                        <Search color={colors.zinc[400]} className="h-5 w-5  rounded-full bg-zinc-300"/>
+                    <View className="rounded-full bg-[#FFEBE9] p-3">
+                        <Search color={colors.rose[950]} className="h-5 w-5  rounded-full bg-zinc-300"/>
                     </View>
                 </View>
             </View>
 
-            <View style={styles.container}>
+            <View style={styles.container} className="border-b border-zinc-400">
                 <Carousel
                 width={SLIDER_WIDTH}
                 autoFillData={true}
@@ -89,6 +90,14 @@ export default function Index() {
                 loop
                 data={newsCarousel}
                 renderItem={CardCarousel}
+                />
+            </View>
+
+            <View className="flex-1 mt-5">
+                <FlatList
+                data={news.slice(0,10)}
+                renderItem={({ item }) => <NewsComponent {...item}/>}
+                contentContainerClassName="gap-4"
                 />
             </View>
         </View>
