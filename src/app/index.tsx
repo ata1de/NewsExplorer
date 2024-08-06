@@ -1,4 +1,4 @@
-import { newsServer } from "@/server/api";
+import { Article, ArticleCarousel, newsServer } from "@/server/api";
 import { colors } from "@/styles/colors";
 import { Bell, Search } from "lucide-react-native";
 import { useEffect, useState } from "react";
@@ -26,21 +26,35 @@ function CardCarousel({ item, index }: cardCarouselProps) {
 
 export default function Index() {
     // DATA
-    const [news, setNews] = useState([])
+    const [news, setNews] = useState<Article[]>([])
+    const [newsCarousel, setNewsCarousel] = useState<ArticleCarousel[]>([])
+
+    // FUNCTIONS
+      //fetch data
+      async function fetchData() {
+        try {
+            const response = await newsServer.getTopNews()
+            console.log(response)
+            setNews(response)
+        } catch (error) {
+            console.log('Error in get news',error)
+            throw error
+        }
+    }
+
+    async function fetchDataCarousel() {
+        try {
+            const response = await newsServer.getTopNewsCarousel()
+            console.log(response)
+            setNewsCarousel(response)
+        } catch (error) {
+            console.log('Error in get news for carousel',error)
+            throw error
+        }
+    }
     
     useEffect(() => {
-        //fetch data
-        async function fetchData() {
-            try {
-                const response = await newsServer.getTopNews()
-                console.log(response)
-                setNews(response)
-            } catch (error) {
-                console.log('Error in get trip data',error)
-                throw error
-            }
-        }
-
+        fetchDataCarousel()
         fetchData()
     },[])
     
