@@ -1,6 +1,5 @@
 import { Loading } from '@/components/loading'
-import '@/styles/global.css'
-import '@/utils/dayjsLocaleConfig'
+import '../../global.css'
 
 import { Inter_400Regular, Inter_500Medium, Inter_600SemiBold, useFonts } from '@expo-google-fonts/inter'
 import { Slot } from 'expo-router'
@@ -19,7 +18,7 @@ export default function Layout() {
         return <Loading/>
     }
     return (
-        <View className='bg-white flex-1 justify-center'>
+        <View className='bg-[#F2F2F2] flex-1 justify-center'>
             <StatusBar barStyle='light-content' backgroundColor='transparent' translucent/>
             <Slot/>
         </View>

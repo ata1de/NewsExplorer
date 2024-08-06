@@ -1,6 +1,8 @@
+import { NEWS_API_KEY } from '@env';
 import axios from 'axios';
 
-const apiKey = process.env.NEWS_API_KEY;
+const apiKey = NEWS_API_KEY;
+console.log(apiKey);
 
 // Função para obter as notícias mais populares pelo nome
 async function getTopNewsByName(currentSearch: string) {
