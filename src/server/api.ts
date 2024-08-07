@@ -42,12 +42,12 @@ async function getTopNewsByName(currentSearch: string) {
   }
 
 // Função para obter as notícias mais populares	
-async function getTopNews(): Promise<Article[]> {
+async function getTopNews(q='technology'): Promise<Article[]> {
   const options = {
     method: 'GET',
     url: 'https://newsapi.org/v2/everything',
     params: {
-      q: 'technology',
+      q,
       sortBy: 'popularity',
       pageSize: 100,
       page: 1,

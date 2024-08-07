@@ -1,5 +1,7 @@
+import { Button } from "@/components/button";
 import { Loading } from "@/components/loading";
 import NewsComponent from "@/components/newsComponent";
+import { buttons } from "@/config/buttons";
 import { Article, ArticleCarousel, newsServer } from "@/server/api";
 import { colors } from "@/styles/colors";
 import { Bell, Search } from "lucide-react-native";
@@ -19,6 +21,10 @@ interface cardCarouselProps {
     index: number
 }
 
+interface fetchDataProps {
+    q?: string
+}
+
 function CardCarousel({ item, index }: cardCarouselProps) {
     return (
         <View className={`bg-white rounded-lg shadow-lg w-[${ITEM_WIDTH}]`} style={styles.cardCarousel}>
@@ -33,11 +39,10 @@ export default function Index() {
     const [newsCarousel, setNewsCarousel] = useState<ArticleCarousel[]>([])
 
     // FUNCTIONS
-      //fetch data
-      async function fetchData() {
+    //fetch data
+      async function fetchData({ q }: fetchDataProps) {
         try {
-            const response = await newsServer.getTopNews()
-            console.log(response)
+            const response = await newsServer.getTopNews(q)
             setNews(response)
         } catch (error) {
             console.log('Error in get news',error)
@@ -45,10 +50,10 @@ export default function Index() {
         }
     }
 
+    //fetch data for carousel
     async function fetchDataCarousel() {
         try {
             const response = await newsServer.getTopNewsCarousel()
-            console.log(response)
             setNewsCarousel(response)
         } catch (error) {
             console.log('Error in get news for carousel',error)
@@ -58,7 +63,7 @@ export default function Index() {
     
     useEffect(() => {
         fetchDataCarousel()
-        fetchData()
+        fetchData({})
     },[])
 
     if (!news || !newsCarousel) {
@@ -67,37 +72,52 @@ export default function Index() {
     
     return (
         <View className="flex-1 p-5">
-            <View className="flex-row justify-between items-center">
-                <Image source={require('../../assets/favicon.png')} className="h-16 w-16"/>
+            <View className="flex-1 border-b border-zinc-400">
+                <View className="flex-row justify-between items-center">
+                    <Image source={require('../../assets/favicon.png')} className="h-16 w-16"/>
 
-                <View className="flex-row justify-center mt-5 gap-3">
-                    <View className="rounded-full bg-[#FFEBE9] p-3">
-                        <Bell color={colors.rose[950]} className="h-5 w-5  "/>
-                    </View>
+                    <View className="flex-row justify-center mt-5 gap-3">
+                        <View className="rounded-full bg-[#FFF7F7] p-3">
+                            <Bell color={colors.rose[950]} className="h-5 w-5  "/>
+                        </View>
 
-                    <View className="rounded-full bg-[#FFEBE9] p-3">
-                        <Search color={colors.rose[950]} className="h-5 w-5  rounded-full bg-zinc-300"/>
+                        <View className="rounded-full bg-[#FFF7F7] p-3">
+                            <Search color={colors.rose[950]} className="h-5 w-5  rounded-full bg-zinc-300"/>
+                        </View>
                     </View>
                 </View>
-            </View>
 
-            <View style={styles.container} className="border-b border-zinc-400">
-                <Carousel
-                width={SLIDER_WIDTH}
-                autoFillData={true}
-                autoPlayInterval={3000}
-                autoPlay={true}
-                loop
-                data={newsCarousel}
-                renderItem={CardCarousel}
-                />
-            </View>
+                <View style={styles.container} className="flex-1">
+                    <Carousel
+                    width={SLIDER_WIDTH}
+                    autoFillData={true}
+                    autoPlayInterval={3000}
+                    autoPlay={true}
+                    loop
+                    data={newsCarousel}
+                    renderItem={CardCarousel}
+                    />
+                </View>
 
-            <View className="flex-1 mt-5">
+                
+                
+            </View>
+            
+            <View className="flex-1 mt-3">
+                <FlatList
+                    horizontal
+                    contentContainerClassName="flex-row gap-3 m-5 pb-4 flex-row justify-center items-center"                    data={buttons}
+                    renderItem={({ item }) => (
+                        <Button variant="primary" onPress={() => fetchData({ q:item})}>
+                            <Button.Title>{item}</Button.Title>
+                        </Button>   
+                    )}
+                    />
+                    
                 <FlatList
                 data={news.slice(0,10)}
                 renderItem={({ item }) => <NewsComponent {...item}/>}
-                contentContainerClassName="gap-4"
+                contentContainerClassName="gap-4 mt-4"
                 />
             </View>
         </View>
