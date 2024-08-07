@@ -1,8 +1,7 @@
-import { NEWS_API_KEY } from '@env';
 import axios from 'axios';
 
-const apiKey = NEWS_API_KEY;
-// console.log(apiKey);
+const apiKey = process.env.EXPO_PUBLIC_NEWS_API_KEY;
+console.log(apiKey);
 
 export type Article = {
   source: {
