@@ -18,7 +18,7 @@ export type Article = {
   content: string;
 }
 
-export type ArticleCarousel = Pick<Article, 'urlToImage'>;
+export type ArticleCarousel = Pick<Article, 'urlToImage' | 'title' | 'author'>;
 
 // Função para obter as notícias mais populares pelo nome
 async function getTopNewsByName(currentSearch: string) {
@@ -69,13 +69,14 @@ async function getTopNews(q='technology'): Promise<Article[]> {
 
 // Função para obter as noticias mais populares e somente as imagens
 async function getTopNewsCarousel(): Promise<ArticleCarousel[]> {
+  const now = new Date();
   const options = {
     method: 'GET',
     url: 'https://newsapi.org/v2/everything',
     params: {
       q: 'technology',
       sortBy: 'relevancy',
-      pageSize: 6,
+      pageSize: 10,
       page: 1,
       apiKey,
     },
@@ -84,9 +85,11 @@ async function getTopNewsCarousel(): Promise<ArticleCarousel[]> {
   try {
     const response = await axios(options);
     return response.data.articles
-    .filter((article: Article) => article.urlToImage)
+    .filter((article: Article) => (article.urlToImage)) // Filtra as notícias que não possuem imagem
     .map((article: Article) => ({
       urlToImage: article.urlToImage,
+      title: article.title,
+      author: article.author
     })) as ArticleCarousel[];
   } catch (error) {
     if (error instanceof Error) {

@@ -6,7 +6,7 @@ import { Article, ArticleCarousel, newsServer } from "@/server/api";
 import { colors } from "@/styles/colors";
 import { Bell, Search } from "lucide-react-native";
 import { useEffect, useState } from "react";
-import { Dimensions, FlatList, Image, StyleSheet, View } from "react-native";
+import { Dimensions, FlatList, Image, StyleSheet, Text, View } from "react-native";
 import Carousel from 'react-native-reanimated-carousel';
 
 //Carousel info
@@ -16,7 +16,9 @@ const ITEM_WIDTH = Math.round(SLIDER_WIDTH * 0.92);
 //Carousel item
 interface cardCarouselProps {
     item: {
-        urlToImage: string
+        urlToImage: string,
+        title: string,
+        author: string
     }
     index: number
 }
@@ -25,10 +27,15 @@ interface fetchDataProps {
     q?: string
 }
 
-function CardCarousel({ item, index }: cardCarouselProps) {
+function CardCarousel({ item }: cardCarouselProps) {
     return (
-        <View className={`bg-white rounded-lg shadow-lg w-[${ITEM_WIDTH}]`} style={styles.cardCarousel}>
+        <View className={`bg-white rounded-lg shadow-lg relative w-[${ITEM_WIDTH}]`} style={styles.cardCarousel}>
             <Image source={{ uri: item.urlToImage }} style={styles.image} className="h-40 w-full rounded-lg"/>
+
+            <View className="absolute bottom-2 left-2">
+                <Text className="text-xl font-bold text-zinc-200 px-2 py-1">{item.title}</Text>
+                <Text className="text-md text-zinc-300 px-2 py-1">{item.author}</Text>
+            </View>
         </View>
     )
 }
@@ -54,6 +61,7 @@ export default function Index() {
     async function fetchDataCarousel() {
         try {
             const response = await newsServer.getTopNewsCarousel()
+            console.log(response)
             setNewsCarousel(response)
         } catch (error) {
             console.log('Error in get news for carousel',error)
