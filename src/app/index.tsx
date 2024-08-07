@@ -33,7 +33,7 @@ function CardCarousel({ item }: cardCarouselProps) {
             <Image source={{ uri: item.urlToImage }} style={styles.image} className="h-40 w-full rounded-lg"/>
 
             <View className="absolute bottom-2 left-2">
-                <Text className="text-2xl font-bold text-zinc-200 px-2 py-1 leading-7">{item.title}</Text>
+                <Text className="text-xl font-bold text-zinc-200 px-2 py-1">{item.title}</Text>
                 <Text className="text-md text-zinc-300 px-2 py-1">{item.author}</Text>
             </View>
         </View>
@@ -61,6 +61,7 @@ export default function Index() {
     async function fetchDataCarousel() {
         try {
             const response = await newsServer.getTopNewsCarousel()
+            console.log(response)
             setNewsCarousel(response)
         } catch (error) {
             console.log('Error in get news for carousel',error)
