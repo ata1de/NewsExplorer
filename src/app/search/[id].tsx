@@ -16,7 +16,6 @@ interface fetchDataProps {
 export default function Search() {
     //PARAMS
     const newsParams = useLocalSearchParams<{ name: string }>().name;
-    console.log(newsParams)
 
     //DATA
     const [news, setNews] = useState<ResponseByName>()
@@ -64,7 +63,7 @@ export default function Search() {
                     </Link>
                 </View>
 
-                <Input className="mt-3 gap-3 flex justify-center items-center max-w-[280px]">
+                <Input className="mt-3 gap-3 flex justify-center items-center max-w-[270px]">
                     <SearchIcon size={20} color={colors.rose[900]} />
                     <Input.Field 
                         value={inputValue} 
@@ -75,7 +74,7 @@ export default function Search() {
                 </Input>
             </View>
 
-            <View className="flex-1 mt-10">
+            <View className="flex-1 mt-8">
                 <Text className="font-bold text-lg"> <Text className="text-rose-800">{news.totalResults}</Text> Results Found for <Text className="text-rose-800">{newsParams}</Text></Text>
 
                 <FlatList  
