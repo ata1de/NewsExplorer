@@ -1,19 +1,21 @@
 import { Button } from "@/components/button";
+import { Input } from "@/components/input";
 import { Loading } from "@/components/loading";
 import NewsComponent from "@/components/newsComponent";
 import { buttons } from "@/config/buttons";
 import { Article, ArticleCarousel, newsServer } from "@/server/api";
 import { colors } from "@/styles/colors";
-import { Bell, Search } from "lucide-react-native";
+import { router } from "expo-router"; // Importar router do expo-router
+import { Search } from "lucide-react-native";
 import { useEffect, useState } from "react";
-import { Dimensions, FlatList, Image, StyleSheet, Text, View } from "react-native";
+import { Alert, Dimensions, FlatList, Image, StyleSheet, Text, View } from "react-native";
 import Carousel from 'react-native-reanimated-carousel';
 
-//Carousel info
+// Carousel info
 const SLIDER_WIDTH = Dimensions.get('window').width;
 const ITEM_WIDTH = Math.round(SLIDER_WIDTH * 0.92);  
 
-//Carousel item
+// Carousel item
 interface cardCarouselProps {
     item: {
         urlToImage: string,
@@ -45,37 +47,56 @@ function CardCarousel({ item }: cardCarouselProps) {
 
 export default function Index() {
     // DATA
+    const [inputValue, setInputValue] = useState<string>("")
     const [news, setNews] = useState<Article[]>([])
     const [newsCarousel, setNewsCarousel] = useState<ArticleCarousel[]>([])
+    const [dropdown, setDropdown] = useState<boolean>(false)
 
     // FUNCTIONS
-    //fetch data
-      async function fetchData({ q }: fetchDataProps) {
+    // fetch data
+    async function fetchData({ q }: fetchDataProps) {
         try {
             const response = await newsServer.getTopNews(q)
             setNews(response)
         } catch (error) {
-            console.log('Error in get news',error)
+            console.log('Error in get news', error)
             throw error
         }
     }
 
-    //fetch data for carousel
+    // fetch data for carousel
     async function fetchDataCarousel() {
         try {
             const response = await newsServer.getTopNewsCarousel()
-            console.log(response)
             setNewsCarousel(response)
         } catch (error) {
-            console.log('Error in get news for carousel',error)
+            console.log('Error in get news for carousel', error)
             throw error
+        }
+    }
+
+    async function handleSubmit() {
+        try {
+            if (inputValue.length === 0) {
+                return Alert.alert('Campo vazio', 'Digite algo para pesquisar')
+            }
+            
+            // Navegar para a nova página
+            router.push({
+                pathname: `/search/${inputValue}` as any,  // Cast para "any" ou "string"
+                params: { q: inputValue },
+            });
+            
+            
+        } catch (error) {
+            console.log('Error in search', error)
         }
     }
     
     useEffect(() => {
         fetchDataCarousel()
         fetchData({})
-    },[])
+    }, [])
 
     if (!news || !newsCarousel) {
         return <Loading/>
@@ -87,48 +108,47 @@ export default function Index() {
                 <View className="flex-row justify-between items-center">
                     <Image source={require('../../assets/favicon.png')} className="h-16 w-16"/>
 
-                    <View className="flex-row justify-center mt-5 gap-3">
-                        <View className="rounded-full bg-[#FFF7F7] p-3">
-                            <Bell color={colors.rose[950]} className="h-5 w-5  "/>
-                        </View>
-
-                        <View className="rounded-full bg-[#FFF7F7] p-3">
-                            <Search color={colors.rose[950]} className="h-5 w-5  rounded-full bg-zinc-300"/>
-                        </View>
-                    </View>
+                    <Input className="mt-3 gap-3 flex justify-center items-center max-w-[250px]">
+                        <Search size={16} color={colors.rose[900]} />
+                        <Input.Field 
+                            value={inputValue} 
+                            onChangeText={setInputValue} 
+                            placeholder="Procure uma notícia"
+                            onPressIn={() => setDropdown(true)}
+                            onSubmitEditing={() => handleSubmit()}
+                        />
+                    </Input>
                 </View>
 
                 <View style={styles.container} className="flex-1">
                     <Carousel
-                    width={SLIDER_WIDTH}
-                    autoFillData={true}
-                    autoPlayInterval={3000}
-                    autoPlay={true}
-                    loop
-                    data={newsCarousel}
-                    renderItem={CardCarousel}
+                        width={SLIDER_WIDTH}
+                        autoFillData={true}
+                        autoPlayInterval={3000}
+                        autoPlay={true}
+                        loop
+                        data={newsCarousel}
+                        renderItem={CardCarousel}
                     />
                 </View>
-
-                
-                
             </View>
             
             <View className="flex-1 mt-3">
                 <FlatList
                     horizontal
-                    contentContainerClassName="flex-row gap-3 m-5 pb-4 flex-row justify-center items-center"                    data={buttons}
+                    contentContainerClassName="flex-row gap-3 m-5 pb-4 flex-row justify-center items-center"                    
+                    data={buttons}
                     renderItem={({ item }) => (
-                        <Button variant="primary" onPress={() => fetchData({ q:item})}>
+                        <Button variant="primary" onPress={() => fetchData({ q: item })}>
                             <Button.Title>{item}</Button.Title>
                         </Button>   
                     )}
-                    />
+                />
                     
                 <FlatList
-                data={news.slice(0,10)}
-                renderItem={({ item }) => <NewsComponent {...item}/>}
-                contentContainerClassName="gap-4 mt-4"
+                    data={news.slice(0, 10)}
+                    renderItem={({ item }) => <NewsComponent {...item} />}
+                    contentContainerClassName="gap-4 mt-4"
                 />
             </View>
         </View>
