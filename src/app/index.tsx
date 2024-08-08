@@ -84,7 +84,7 @@ export default function Index() {
             // Navegar para a nova página
             router.push({
                 pathname: `/search/${inputValue}` as any,  // Cast para "any" ou "string"
-                params: { q: inputValue },
+                params: { name: inputValue },
             });
             
             

@@ -17,10 +17,16 @@ export type Article = {
   content: string;
 }
 
+export type ResponseByName = {
+  status: string;
+  totalResults: number;
+  articles: Article[];
+}
+
 export type ArticleCarousel = Pick<Article, 'urlToImage' | 'title' | 'author'>;
 
 // Função para obter as notícias mais populares pelo nome
-async function getTopNewsByName(currentSearch: string) {
+async function getTopNewsByName(currentSearch: string): Promise<ResponseByName> {
     const options = {
       method: 'GET',
       url: 'https://newsapi.org/v2/everything',
@@ -33,10 +39,15 @@ async function getTopNewsByName(currentSearch: string) {
   
     try {
       const response = await axios(options);
-      return response.data.articles;
+      const filteredArticles = response.data.articles.filter((article: Article) => article.urlToImage);
+      return {
+        status: response.data.status,
+        totalResults: filteredArticles.length,
+        articles: filteredArticles,
+      };
     } catch (error) {
       console.error('Erro ao buscar notícias pelo nome:', error);
-      return [];
+      return { status: 'error', totalResults: 0, articles: [] };
     }
   }
 
