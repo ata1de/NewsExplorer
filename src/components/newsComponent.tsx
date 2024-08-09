@@ -6,7 +6,7 @@ import { Image, Text, View } from "react-native";
 
 export default function NewsComponent(article: Article) {
     return (
-        <Link href={`/`} className="w-full">
+        <Link href={`/article/${article.title}` as any} className="w-full">
             <View className="w-full items-center justify-between flex-row px-4">
             <View className="flex-row gap-3">
                 <Image source={{ uri: article.urlToImage }} className="rounded-2xl w-20 h-20" />

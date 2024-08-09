@@ -109,4 +109,24 @@ async function getTopNewsCarousel(): Promise<ArticleCarousel[]> {
   }
 }
 
-export const newsServer = { getTopNews, getTopNewsByName, getTopNewsCarousel };
+async function getArticleByName(name: string): Promise<Article> {
+  const options = {
+    method: 'GET',
+    url: 'https://newsapi.org/v2/everything',
+    params: {
+      q: name,
+      sortBy: 'popularity',
+      apiKey,
+    },
+  };
+
+  try {
+    const response = await axios(options);
+    return response.data.articles[0] as Article;
+  } catch (error) {
+    console.error('Erro ao buscar notícia pelo nome:', error);
+    return {} as Article;
+  }
+}
+
+export const newsServer = { getTopNews, getTopNewsByName, getTopNewsCarousel, getArticleByName };
