@@ -3,10 +3,10 @@ import { Loading } from "@/components/loading";
 import NewsComponent from "@/components/newsComponent";
 import { newsServer, ResponseByName } from "@/server/api";
 import { colors } from "@/styles/colors";
-import { Link, router, useLocalSearchParams } from "expo-router";
+import { router, useLocalSearchParams } from "expo-router";
 import { ArrowLeft, Search as SearchIcon } from "lucide-react-native";
 import { useEffect, useState } from "react";
-import { Alert, FlatList, Text, View } from "react-native";
+import { Alert, FlatList, Pressable, Text, View } from "react-native";
 
 
 interface fetchDataProps {
@@ -57,13 +57,11 @@ export default function Search() {
     return (
         <View className="flex-1 p-5">
             <View className="flex-row gap-4 justify-between items-center">
-                <View className="bg-rose-100 p-2 rounded-full items-center justify-center mt-3">
-                    <Link href={'/'} className="flex items-center justify-center">
-                        <ArrowLeft size={24} color={colors.rose[900]} />
-                    </Link>
-                </View>
+                <Pressable onPressIn={() => router.back()} className="flex bg-rose-200 mt-3 rounded-3xl p-2 items-center justify-center">
+                    <ArrowLeft size={24} color={colors.rose[900]} />
+                </Pressable>
 
-                <Input className="mt-3 gap-3 flex justify-center items-center max-w-[270px]">
+                <Input className="mt-3 gap-3 flex justify-center items-center max-w-[269px]">
                     <SearchIcon size={20} color={colors.rose[900]} />
                     <Input.Field 
                         value={inputValue} 
@@ -74,13 +72,13 @@ export default function Search() {
                 </Input>
             </View>
 
-            <View className="flex-1 mt-8">
+            <View className="flex-1 mt-7">
                 <Text className="font-bold text-lg"> <Text className="text-rose-800">{news.totalResults}</Text> Results Found for <Text className="text-rose-800">{newsParams}</Text></Text>
 
                 <FlatList  
                     data={news.articles}
                     renderItem={({ item }) => <NewsComponent {...item} />}
-                    contentContainerClassName="gap-4 mt-4"
+                    contentContainerClassName="gap-4 mt-5"
                 />
 
             </View>

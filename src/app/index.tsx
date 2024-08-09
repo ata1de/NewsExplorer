@@ -5,7 +5,7 @@ import NewsComponent from "@/components/newsComponent";
 import { buttons } from "@/config/buttons";
 import { Article, ArticleCarousel, newsServer } from "@/server/api";
 import { colors } from "@/styles/colors";
-import { router } from "expo-router"; // Importar router do expo-router
+import { Link, router } from "expo-router"; // Importar router do expo-router
 import { Search } from "lucide-react-native";
 import { useEffect, useState } from "react";
 import { Alert, Dimensions, FlatList, Image, StyleSheet, Text, View } from "react-native";
@@ -32,16 +32,18 @@ interface fetchDataProps {
 function CardCarousel({ item }: cardCarouselProps) {
 
     return (
-        <View className={`bg-white rounded-lg relative shadow-lg w-[${ITEM_WIDTH}]`} style={styles.cardCarousel}>
-            <Image source={{ uri: item.urlToImage }} style={styles.image} className="h-40 w-full rounded-lg"/>
+        <Link href={`/article/${item.title}`} className="flex-1">
+            <View className={`bg-white rounded-lg relative shadow-lg w-[${ITEM_WIDTH}]`} style={styles.cardCarousel}>
+                <Image source={{ uri: item.urlToImage }} style={styles.image} className="h-40 w-full rounded-lg"/>
 
-            <View className="absolute inset-0 bg-black/30 h-full w-full" />
+                <View className="absolute inset-0 bg-black/30 h-full w-full" />
 
-            <View className="absolute bottom-2 left-2">
-                <Text className="text-xl font-bold text-zinc-200 px-2 py-1 max-w-[95%]">{item.title}</Text>
-                <Text className="text-md text-zinc-300 px-2 py-1">{item.author}</Text>
+                <View className="absolute bottom-2 left-2">
+                    <Text className="text-xl font-bold text-zinc-200 px-2 py-1 max-w-[95%]">{item.title}</Text>
+                    <Text className="text-md text-zinc-300 px-2 py-1">{item.author}</Text>
+                </View>
             </View>
-        </View>
+        </Link>
     )
 }
 

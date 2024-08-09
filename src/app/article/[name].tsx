@@ -1,8 +1,10 @@
 import { Loading } from "@/components/loading"
 import { Article, newsServer } from "@/server/api"
-import { useLocalSearchParams } from "expo-router"
+import { colors } from "@/styles/colors"
+import { router, useLocalSearchParams } from "expo-router"
+import { ArrowLeft, LinkIcon, UserCircle2 } from "lucide-react-native"
 import { useEffect, useState } from "react"
-import { Image, Text, View } from "react-native"
+import { Image, Linking, Pressable, Text, View } from "react-native"
 
 interface ArticleProps {
     article: Article
@@ -34,21 +36,41 @@ export default function ArticlePage() {
     )
 
     return (
-            <View className="w-full items-center justify-between flex-row px-4">
-                <View className="flex-row gap-3">
-                    <Image source={{ uri: article.urlToImage }} className="rounded-2xl w-20 h-20" />
+            <View className="flex-1 p-5">
+                <View className="border-b border-zinc-400">
+                    <View className="flex-row justify-between items-center">
+                        <View className="bg-rose-100 p-2 rounded-full items-center justify-center mt-3">
+                            <Pressable onPress={() => router.back()} className="flex items-center justify-center">
+                                <ArrowLeft size={24} color={colors.rose[900]} />
+                            </Pressable>
+                        </View>
 
-                    <View className="gap-2 ml-3">
-                        <Text className="text-sm text-zinc-700 max-w-[72%] overflow-hidden text-ellipsis whitespace-nowrap max-h-6">
-                            {article.author}
-                        </Text>
-                        <Text className="text-sm font-bold text-zinc-900 max-w-[72%] overflow-hidden text-ellipsis max-h-10">
-                            {article.title}
-                        </Text>
-                        <Text className="text-sm font-normal text-zinc-400 max-w-[72%] overflow-hidden text-ellipsis whitespace-nowrap max-h-6">
-                            {article.publishedAt}
-                        </Text>
+                        <View className="bg-rose-100 p-2 rounded-full items-center justify-center mt-3">
+                            <Pressable onPress={() => Linking.openURL(article.url)} className="flex items-center justify-center">
+                                <LinkIcon size={24} color={colors.rose[900]} />
+                            </Pressable>
+                        </View>
                     </View>
+
+                    <Image source={{ uri: article.urlToImage }} className="h-60 my-6 w-[100%] rounded-xl shadow-md"/>
+                </View>
+
+                <View className="flex-1 mt-5">
+                    <Text className="font-bold text-2xl max-w-[95%] text-wrap leading-7">{article.title}</Text>
+
+                    <View className="flex-row justify-between items-center mt-4">
+                        <View className="flex-row gap-2 items-center justify-center">
+                            <UserCircle2 size={24} color={colors.rose[900]} />
+                            <Text className="text-sm max-w-[150px] text-wrap text-gray-500">{article.author}</Text>
+                        </View>
+                        <Text className="text-sm text-gray-500">{article.publishedAt}</Text>
+                    </View>              
+                </View>
+
+                <View className="flex-1 overflow-y-scroll flex-col">
+                    <Text className="text-lg">{article.description}</Text>
+                    
+                    <Text className="text-lg mt-5">{article.content}</Text>
                 </View>
             </View>
     )
