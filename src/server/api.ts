@@ -1,3 +1,4 @@
+import { dayjsTransformDate } from '@/utils/dayjsTransformDate';
 import axios from 'axios';
 
 const apiKey = process.env.EXPO_PUBLIC_NEWS_API_KEY;
@@ -39,7 +40,10 @@ async function getTopNewsByName(currentSearch: string): Promise<ResponseByName> 
   
     try {
       const response = await axios(options);
-      const filteredArticles = response.data.articles.filter((article: Article) => article.urlToImage);
+      const filteredArticles = response.data.articles.filter((article: Article) => article.urlToImage).map((article: Article) => ({
+        ...article,
+        publishedAt: dayjsTransformDate(new Date(article.publishedAt)),
+      })) as Article[];
       return {
         status: response.data.status,
         totalResults: filteredArticles.length,
@@ -68,7 +72,10 @@ async function getTopNews(q='technology'): Promise<Article[]> {
   try {
     const response = await axios(options);
     return response.data.articles
-    .filter((article: Article) => article.urlToImage) as Article[];
+    .filter((article: Article) => article.urlToImage).map((article: Article) => ({
+      ...article,
+      publishedAt: dayjsTransformDate(new Date(article.publishedAt)),
+    })) as Article[];
   } catch (error) {
     if (error instanceof Error) {
       console.error('Erro ao buscar notícias:', error.message);

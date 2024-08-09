@@ -1,6 +1,7 @@
 import { Loading } from "@/components/loading"
 import { Article, newsServer } from "@/server/api"
 import { colors } from "@/styles/colors"
+import { dayjsTransformDate } from "@/utils/dayjsTransformDate"
 import { router, useLocalSearchParams } from "expo-router"
 import { ArrowLeft, LinkIcon, UserCircle2 } from "lucide-react-native"
 import { useEffect, useState } from "react"
@@ -16,6 +17,9 @@ export default function ArticlePage() {
 
     //DATA
     const [article, setArticle] = useState<Article>()
+
+    //FOMART DATE
+    const date = article?.publishedAt ? dayjsTransformDate(new Date(article?.publishedAt)) : 'No publication date'
 
     //FUNCTIONS
     async function getTopNewsByName(currentSearch: string) { 
@@ -63,7 +67,7 @@ export default function ArticlePage() {
                             <UserCircle2 size={24} color={colors.rose[900]} />
                             <Text className="text-sm max-w-[150px] text-wrap text-gray-500">{article.author}</Text>
                         </View>
-                        <Text className="text-sm text-gray-500">{article.publishedAt}</Text>
+                        <Text className="text-sm text-gray-500">{date}</Text>
                     </View>              
                 </View>
 

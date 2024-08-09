@@ -54,15 +54,21 @@ export default function Index() {
     const [newsCarousel, setNewsCarousel] = useState<ArticleCarousel[]>([])
     const [dropdown, setDropdown] = useState<boolean>(false)
 
+    //LOADING
+    const [ isLoading, setIsLoading ] = useState<boolean>(false)
+
     // FUNCTIONS
     // fetch data
     async function fetchData({ q }: fetchDataProps) {
         try {
+            setIsLoading(true)
             const response = await newsServer.getTopNews(q)
             setNews(response)
         } catch (error) {
             console.log('Error in get news', error)
             throw error
+        } finally {
+            setIsLoading(false)
         }
     }
 
@@ -146,12 +152,16 @@ export default function Index() {
                         </Button>   
                     )}
                 />
-                    
+
                 <FlatList
                     data={news.slice(0, 10)}
-                    renderItem={({ item }) => <NewsComponent {...item} />}
+                    renderItem={({ item }) => (isLoading ? (
+                        <Loading/>
+                    ) : <NewsComponent {...item} />)}
                     contentContainerClassName="gap-4 mt-4"
                 />
+                    
+                
             </View>
         </View>
     )

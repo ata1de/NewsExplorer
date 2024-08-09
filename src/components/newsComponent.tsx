@@ -11,7 +11,7 @@ export default function NewsComponent(article: Article) {
             <View className="flex-row gap-3">
                 <Image source={{ uri: article.urlToImage }} className="rounded-2xl w-20 h-20" />
 
-                <View className="gap-2 ml-3">
+                <View className="gap-1 ml-3">
                     <Text className="text-sm text-zinc-700 max-w-[72%] overflow-hidden text-ellipsis whitespace-nowrap max-h-6">
                         {article.author}
                     </Text>
