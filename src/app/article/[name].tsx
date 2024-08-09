@@ -4,7 +4,7 @@ import { colors } from "@/styles/colors"
 import { router, useLocalSearchParams } from "expo-router"
 import { ArrowLeft, LinkIcon, UserCircle2 } from "lucide-react-native"
 import { useEffect, useState } from "react"
-import { Image, Linking, Pressable, Text, View } from "react-native"
+import { Image, Linking, Pressable, ScrollView, Text, View } from "react-native"
 
 interface ArticleProps {
     article: Article
@@ -55,7 +55,7 @@ export default function ArticlePage() {
                     <Image source={{ uri: article.urlToImage }} className="h-60 my-6 w-[100%] rounded-xl shadow-md"/>
                 </View>
 
-                <View className="flex-1 mt-5">
+                <View className="mt-5">
                     <Text className="font-bold text-2xl max-w-[95%] text-wrap leading-7">{article.title}</Text>
 
                     <View className="flex-row justify-between items-center mt-4">
@@ -67,11 +67,11 @@ export default function ArticlePage() {
                     </View>              
                 </View>
 
-                <View className="flex-1 overflow-y-scroll flex-col">
+                <ScrollView className="flex-1 mt-5 overflow-y-scroll flex-col">
                     <Text className="text-lg">{article.description}</Text>
                     
                     <Text className="text-lg mt-5">{article.content}</Text>
-                </View>
+                </ScrollView>
             </View>
     )
 }
