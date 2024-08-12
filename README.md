@@ -5,7 +5,7 @@
 
 ## SCREENSHOTS
 
-![mockup-news-explorer](https://github.com/user-attachments/assets/5aa937e6-5555-4027-b38c-86191399d065)
+![mockup-news-explorer](https://github.com/user-attachments/assets/2b00bc45-5c9c-4746-926d-622be5e5e5fd)
 
  ## WebSite Arkan Seguros
 
