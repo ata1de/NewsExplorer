@@ -52,7 +52,7 @@ export default function Index() {
     const [inputValue, setInputValue] = useState<string>("")
     const [news, setNews] = useState<Article[]>([])
     const [newsCarousel, setNewsCarousel] = useState<ArticleCarousel[]>([])
-    const [dropdown, setDropdown] = useState<boolean>(false)
+    const [activeButton, setActiveButton] = useState<string | null>(null); 
 
     //LOADING
     const [ isLoading, setIsLoading ] = useState<boolean>(false)
@@ -114,15 +114,16 @@ export default function Index() {
         <View className="flex-1 p-5">
             <View className="flex-1 border-b border-zinc-400">
                 <View className="flex-row justify-between items-center">
-                    <Image source={require('../../assets/favicon.png')} className="h-16 w-16"/>
+                    <Link href={'/'}>
+                        <Image source={require('../../assets/favicon.png')} className="h-16 w-16"/>
+                    </Link>
 
-                    <Input className="mt-3 gap-3 flex justify-center items-center max-w-[250px]">
+                    <Input className="mt-3 gap-2 flex items-center max-w-[250px]">
                         <Search size={16} color={colors.rose[900]} />
                         <Input.Field 
                             value={inputValue} 
                             onChangeText={setInputValue} 
                             placeholder="Procure uma notícia"
-                            onPressIn={() => setDropdown(true)}
                             onSubmitEditing={() => handleSubmit()}
                         />
                     </Input>
@@ -147,12 +148,17 @@ export default function Index() {
                     contentContainerClassName="flex-row gap-3 m-5 pb-4 flex-row justify-center items-center"                    
                     data={buttons}
                     renderItem={({ item }) => (
-                        <Button variant="primary" onPress={() => fetchData({ q: item })}>
+                        <Button
+                            variant={activeButton === item ? "secondary" : "primary"} 
+                            onPress={() => {
+                                setActiveButton(item); 
+                                fetchData({ q: item });
+                            }}
+                        >
                             <Button.Title>{item}</Button.Title>
                         </Button>   
                     )}
                 />
-
                 <FlatList
                     data={news.slice(0, 10)}
                     renderItem={({ item }) => (isLoading ? (
